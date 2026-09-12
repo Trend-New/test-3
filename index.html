@@ -1,0 +1,334 @@
+Here’s a **single, self‑contained `index.html`** that captures the Nord & Vale brand direction you specified: monochrome base (off‑white #F5F5F3, near‑black #111111), deep‑forest‑green accent #1B3A2B, Inter for UI, responsive grid at the requested breakpoints, accessible micro‑interactions, and the required homepage sections (hero, featured collections, new‑arrivals carousel, brand story, newsletter signup).  
+Copy the entire block below and save it as `index.html`; open it in any modern browser.
+
+```html
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nord & Vale | Minimalist Luxury Streetwear</title>
+  <!-- Inter: UI sans‑serif (400/500/600/700) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* -------------------------------------------------
+       CSS design tokens (matching the brief)
+       ------------------------------------------------- */
+    :root {
+      --bg: #F5F5F3;          /* off‑white */
+      --fg: #111111;          /* near‑black */
+      --muted: #6B6B6B;       /* subtle text */
+      --accent: #1B3A2B;      /* deep forest green */
+    }
+
+    /* Reset & base */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    /* Focus visible – the “quiet‑luxury” outline */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+    /* Skip link */
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { left: 0; top: 0; width: auto; height: auto; }
+
+    /* -------------------------------------------------
+       Utility helpers (small inline library)
+       ------------------------------------------------- */
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
+    .grid { display: grid; gap: 1.5rem; }
+    .flex { display: flex; align-items: center; gap: 1rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 0.5rem; padding: 0.75rem 1.5rem;
+      border-radius: .5rem; font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background .2s, color .2s;
+      text-decoration: none;
+    }
+    .btn:hover { filter: opacity-90; }
+    .btn-primary { background: var(--accent); color: var(--bg); }
+    .btn-primary:hover { background: #2c4a34; }
+    .btn-secondary { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+    .btn-secondary:hover { background: var(--accent); color: var(--bg); }
+    .text-accent { color: var(--accent); }
+    .text-muted { color: var(--muted); }
+    .underline { text-decoration: underline; text-underline-offset: 4px; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+    /* -------------------------------------------------
+       Header
+       ------------------------------------------------- */
+    header {
+      border-bottom: 1px solid var(--muted);
+      background: var(--bg);
+    }
+    .header-wrap {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem;
+    }
+    .logo { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 1.25rem; letter-spacing: .1em; }
+    .nav a { color: var(--muted); transition: color .2s; }
+    .nav a:hover { color: var(--accent); }
+
+    /* -------------------------------------------------
+       Hero banner
+       ------------------------------------------------- */
+    .hero {
+      position: relative; min-height: 60vh;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg) 100%);
+    }
+    .hero .bg-accent {
+      position: absolute; inset: 0; background: var(--accent); opacity: .15;
+    }
+    .hero .content {
+      position: relative; max-width: 76rem; margin: 0 auto; padding: 2rem 1rem;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .hero h1 { font-size: 3.5rem; line-height: 1.1; font-weight: 700; letter-spacing: -.05em; }
+    .hero p { max-width: 40rem; margin: 1.5rem auto; color: var(--muted); font-size: 1.125rem; }
+    .hero .btn { margin-top: 2rem; }
+
+    /* -------------------------------------------------
+       Featured collections grid
+       ------------------------------------------------- */
+    .section { padding: 4rem 1rem; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-header h2 { font-size: 2rem; font-weight: 600; margin-bottom .5rem; }
+    .section-header p { color: var(--muted); max-width: 48rem; margin: 0 auto; }
+
+    .products-grid {
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+      gap: 1rem;
+    }
+    .product-card {
+      background: var(--bg); border-radius: .75rem; overflow: hidden;
+      transition: box-shadow .3s;
+    }
+    .product-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .product-img { height: 16rem; background: var(--muted); display: flex; align-items: center; justify-content: center; color: var(--fg); font-size: .875rem; }
+    .product-info { padding: 1rem; }
+    .product-info h3 { font-size: .875rem; font-weight: 500; margin-bottom .25rem; }
+    .product-info .price { font-size: .75rem; color: var(--accent); }
+
+    /* -------------------------------------------------
+       New arrivals carousel (horizontal scroll)
+       ------------------------------------------------- */
+    .new-arrivals {
+      background: var(--bg); padding: 2rem 1rem;
+    }
+    .carousel {
+      overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; }
+    .carousel::-webkit-scrollbar { display: none; }
+    .carousel-wrapper { display: flex; scroll-snap-align: start; gap: 1rem; }
+    .carousel-card {
+      flex: 0 0 16rem; background: var(--bg); border-radius: .75rem;
+      padding: 1rem; text-align: center; transition: transform .2s;
+    }
+    .carousel-card:hover { transform: translateY(-4px); }
+    .carousel-card .img-placeholder { height: 8rem; background: var(--muted); margin-bottom .75rem; }
+    .carousel-card .name { font-size: .875rem; font-weight: 500; margin-bottom .25rem; }
+    .carousel-card .price { font-size: .75rem; color: var(--accent); }
+
+    /* Nav arrows for carousel */
+    .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--muted); }
+    .arrow.prev { left: 1rem; }
+    .arrow.next { right: 1rem; }
+
+    /* -------------------------------------------------
+       Brand story
+       ------------------------------------------------- */
+    .brand-story { max-width: 48rem; margin: 0 auto; color: var(--muted); line-height: 1.8; }
+
+    /* -------------------------------------------------
+      Newsletter signup
+      ------------------------------------------------- */
+    .newsletter { background: var(--accent); color: var(--bg); padding: 3rem 1rem; text-align: center; }
+    .newsletter h3 { font-size: 1.75rem; margin-bottom 1rem; }
+    .newsletter form { max-width: 28rem; margin: 0 auto; display: flex; gap: .75rem; }
+    .newsletter input { flex: 1; padding .75rem 1rem; border: none; border-radius: .5rem; font-family: 'Inter', system-ui, sans-serif; }
+    .newsletter button { padding: 0 2rem; }
+
+    /* -------------------------------------------------
+       Footer
+       ------------------------------------------------- */
+    footer { background: var(--fg); color: var(--bg); padding: 3rem 1rem 1.5rem; }
+    .footer-wrap { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+    .footer-links ul { list-style: none; padding-left: 0; }
+    .footer-links li { margin-bottom .5rem; }
+    .footer-links a { color: inherit; transition: color .2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { margin-top: 2rem; padding-top 2rem; border-top: 1px solid rgba(255,255,255,.1); text-align: center; font-size .875rem; }
+
+    /* -------------------------------------------------
+      Responsive: 375px, 768px, 1024px, 1440px
+      ------------------------------------------------- */
+    @media (min-width: 375px) { .container { padding: 0 .75rem; } }
+    @media (min-width: 768px) { .hero h1 { font-size: 4.5rem; } .grid { gap: 2rem; } }
+    @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); } }
+    @media (min-width: 1440px) { .container { padding: 0 2rem; } }
+  </style>
+</head>
+<body class="skip-link">
+
+  <!-- ==================== Header ==================== -->
+  <header>
+    <div class="container header-wrap">
+      <h1 class="logo">Nord &amp; Vale</h1>
+      <nav class="nav">
+        <a href="#collections" class="underline">Shop</a>
+        <a href="#about">About</a>
+        <a href="#newsletter">Newsletter</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== Hero ==================== -->
+  <section class="hero">
+    <div class="bg-accent"></div>
+    <div class="container">
+      <div class="content">
+        <h1>Timeless Essentials</h1>
+        <p>Understated luxury for the modern wardrobe. Crafted from the finest materials, designed to last.</p>
+        <a href="#collections" class="btn btn-primary">Shop Collection</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Featured Collections ==================== -->
+  <main>
+    <section class="section" id="collections">
+      <div class="container">
+        <div class="section-header">
+          <h2>Featured Collections</h2>
+          <p>A curated edit of our core seasons.</p>
+        </div>
+        <div class="products-grid">
+          <!-- 4 product cards -->
+          <article class="product-card">
+            <div class="product-img">Product Image</div>
+            <div class="product-info">
+              <h3>Essential Cotton Tee</h3>
+              <p class="price">$125</p>
+            </div>
+          </article>
+          <article class="product-card">
+            <div class="product-img">Product Image</div>
+            <div class="product-info">
+              <h3>Woven Trouser</h3>
+              <p class="price">$295</p>
+            </div>
+          </article>
+          <article class="product-card">
+            <div class="product-img">Product Image</div>
+            <div class="product-info">
+              <h3>Merino Crewneck</h3>
+              <p class="price">$195</p>
+            </div>
+          </article>
+          <article class="product-card">
+            <div class="product-img">Product Image</div>
+            <div class="product-info">
+              <h3>Leather Belt</h3>
+              <p class="price">$145</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== New Arrivals Carousel ==================== -->
+    <section class="new-arrivals" id="new-arrivals">
+      <div class="container">
+        <h3 class="section-header">New Arrivals</h3>
+        <div class="carousel">
+          <button class="arrow prev" aria-label="Previous">←</button>
+          <div class="carousel-wrapper">
+            <article class="carousel-card">
+              <div class="img-placeholder">1</div>
+              <div class="name">Lightweight Jacket</div>
+              <div class="price">$320</div>
+            </article>
+            <article class="carousel-card">
+              <div class="img-placeholder">2</div>
+              <div class="name">Silk Shirt</div>
+              <div class="price">$240</div>
+            </article>
+            <article class="carousel-card">
+              <div class="img-placeholder">3</div>
+              <div class.name">Wide‑Leg Trouser</div>
+              <div class="price">$275</div>
+            </article>
+          </div>
+          <button class="arrow next" aria-label="Next">→</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Brand Story ==================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="brand-story">
+          <p>Nord & Vale was founded on the belief that true luxury is quiet. Each piece is designed to transcend trends, focusing on minimal silhouettes and enduring quality. From the studio to the street, our garments are a reflection of understated confidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Newsletter Signup ==================== -->
+    <section class="newsletter">
+      <div class="container">
+        <h3>Join the Nord & Vale Circle</h3>
+        <form onsubmit="alert('Thanks for subscribing!'); return false;">
+          <input type="email" required placeholder="Enter your email" autocomplete="email">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== Footer ==================== -->
+  <footer>
+    <div class="container footer-wrap">
+      <div>
+        <h4>Nord &amp; Vale</h4>
+        <p class="text-sm">Minimalist luxury streetwear for those who appreciate the quiet.</p>
+      </div>
+      <nav class="footer-links">
+        <ul>
+          <li><a href="#collections">Shop</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#newsletter">Newsletter</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>2025 Nord & Vale. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ==================== Simple carousel arrow click ==================== -->
+  <script>
+    (() => {
+      const carousel = document.querySelector('.carousel-wrapper');
+      const step = 180; // pixels per step
+      document.querySelectorAll('.arrow').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const dir = btn.classList.contains('next') ? 1 : -1;
+          carousel.scrollLeft += dir * step;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+```
